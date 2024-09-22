@@ -2,6 +2,7 @@ package com.sparta.product.controller;
 
 import com.sparta.product.common.response.ResponseUtil;
 import com.sparta.product.common.response.SuccessResponse;
+import com.sparta.product.controller.dto.ReviewListResponse;
 import com.sparta.product.controller.dto.ReviewRequest;
 import com.sparta.product.controller.dto.ReviewResponse;
 import com.sparta.product.domain.review.ReviewService;
@@ -25,5 +26,13 @@ public class ReviewController {
     ) {
         ReviewResponse response = reviewService.addReview(reviewRequest, imageFile ,productId);
         return ResponseUtil.success(response);
+    }
+
+    @GetMapping("/{productId}/reviews")
+    public SuccessResponse<ReviewListResponse> readAllReview(@PathVariable Long productId,
+                                                             @RequestParam(required = true, defaultValue = "0") Integer cursor,
+                                                             @RequestParam(required = false, defaultValue = "10") Integer size){
+        ReviewListResponse reviews = reviewService.getAllReviews(productId,cursor,size);
+        return ResponseUtil.success(reviews);
     }
 }

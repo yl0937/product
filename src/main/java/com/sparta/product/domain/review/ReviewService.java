@@ -2,6 +2,7 @@ package com.sparta.product.domain.review;
 
 import com.sparta.product.common.exception.BaseException;
 import com.sparta.product.common.exception.ErrorCode;
+import com.sparta.product.controller.dto.ReviewListResponse;
 import com.sparta.product.controller.dto.ReviewRequest;
 import com.sparta.product.controller.dto.ReviewResponse;
 import com.sparta.product.domain.product.Product;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -38,5 +41,15 @@ public class ReviewService {
         }
 
         return ReviewResponse.from(reviewRepository.save(Review.from(reviewRequest,product_id)));
+    }
+
+    public ReviewListResponse getAllReviews(Long product_id, Integer cursor, Integer size) {
+        Product product = productRepository.findById(product_id)
+                .orElseThrow(() -> new BaseException(ErrorCode.WRONG_PRODUCT));
+
+        List<ReviewResponse> reviews = reviewRepository.findAllByProductIdWithCursor(product_id,cursor,size)
+                .stream().map(ReviewResponse::from).toList();
+
+        return ReviewListResponse.from(product.getReviewCount(),product.getScore(),cursor,reviews);
     }
 }
