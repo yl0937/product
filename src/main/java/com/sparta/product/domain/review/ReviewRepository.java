@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-
+    boolean existsByUserIdAndProductId(Long userId, Long productId);
 }
