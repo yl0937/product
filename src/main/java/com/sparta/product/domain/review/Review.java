@@ -1,5 +1,6 @@
 package com.sparta.product.domain.review;
 
+import com.sparta.product.controller.dto.ReviewRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,4 +25,14 @@ public class Review {
     private String image_url;
     private LocalDateTime created_at;
 
+    public static Review from(ReviewRequest request, Long product_id){
+        return Review.builder()
+                .userId(request.getUser_id())
+                .productId(product_id)
+                .content(request.getContent())
+                .score(request.getScore())
+                .image_url(request.getImage())
+                .created_at(LocalDateTime.now())
+                .build();
+    }
 }
