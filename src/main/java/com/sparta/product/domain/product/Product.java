@@ -20,7 +20,8 @@ public class Product {
     private Float score;
 
     public void updateProduct(Long count, ReviewRequest request){
-        this.reviewCount = count+1;
-        this.score = ( request.getScore() + request.getScore().floatValue() )/ reviewCount;
+        Float newScore = ((this.score * this.reviewCount) + request.getScore())/ (this.reviewCount + 1);
+        this.reviewCount++;
+        this.score = newScore;
     }
 }
